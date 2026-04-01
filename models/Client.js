@@ -25,6 +25,8 @@ const clientSchema = new mongoose.Schema({
   paymentStatus: { type: String, enum: ['CLEAR', 'PENDING'], default: 'PENDING' },
   serviceEnabled: { type: Boolean, default: true },
   createdAt: { type: String, required: true },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date },
   documents: [documentSchema],
   familyMembers: [familyMemberSchema],
 }, { timestamps: true });
