@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+*package-lock.json
+# Postman collections
+postman_collection.json
+
+uploads/

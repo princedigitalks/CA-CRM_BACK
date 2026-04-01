@@ -1,0 +1,32 @@
+const mongoose = require('mongoose');
+
+const documentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  size: { type: String, required: true },
+  uploadedAt: { type: String, required: true },
+  category: { type: String, required: true },
+  itrYear: { type: String },
+  filePath: { type: String },
+}, { _id: true });
+
+const familyMemberSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  relation: { type: String, required: true },
+  phone: { type: String },
+  email: { type: String },
+  documents: [documentSchema],
+}, { _id: true });
+
+const clientSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String },
+  phone: { type: String, required: true },
+  paymentStatus: { type: String, enum: ['CLEAR', 'PENDING'], default: 'PENDING' },
+  serviceEnabled: { type: Boolean, default: true },
+  createdAt: { type: String, required: true },
+  documents: [documentSchema],
+  familyMembers: [familyMemberSchema],
+}, { timestamps: true });
+
+module.exports = mongoose.model('Client', clientSchema);
