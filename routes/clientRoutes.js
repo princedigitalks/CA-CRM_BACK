@@ -20,7 +20,7 @@ const upload = require('../utils/multerConfig');
 router.get('/clients', protect, getAllClients);
 router.get('/clients/search', protect, searchClients);
 router.get('/clients/:id', protect, getClientById);
-router.get('/clientsfind/:id', getClientById);
+router.get('/clientsfind', getAllClients);
 router.post('/clients', protect, createClient);
 router.put('/clients/:id', protect, updateClient);
 router.delete('/clients/:id', protect, deleteClient);
