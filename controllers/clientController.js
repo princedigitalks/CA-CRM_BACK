@@ -53,6 +53,18 @@ exports.getAllClients = async (req, res) => {
   }
 };
 
+exports.getAllClientsData = async (req, res) => {
+  try {
+   
+
+    const clients = await Client.find()
+
+    res.json(clients);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getClientById = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
@@ -195,7 +207,7 @@ exports.deleteDocument = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
     }
-    
+
     let docToDelete = null;
     if (memberId) {
       const member = client.familyMembers.find(m => m._id.toString() === memberId);
@@ -207,11 +219,11 @@ exports.deleteDocument = async (req, res) => {
       docToDelete = client.documents.find(d => d._id.toString() === docId);
       client.documents = client.documents.filter(d => d._id.toString() !== docId);
     }
-    
+
     if (docToDelete && docToDelete.filePath) {
       deleteFile(docToDelete.filePath);
     }
-    
+
     await client.save();
     res.json(client);
   } catch (error) {
@@ -236,8 +248,8 @@ exports.uploadDocument = async (req, res) => {
     const doc = {
       name: name || req.file.originalname,
       type: req.file.mimetype.includes('pdf') ? 'PDF' :
-            req.file.mimetype.includes('image') ? 'Image' :
-            req.file.mimetype.includes('word') ? 'Word' :
+        req.file.mimetype.includes('image') ? 'Image' :
+          req.file.mimetype.includes('word') ? 'Word' :
             req.file.mimetype.includes('excel') ? 'Excel' : 'Other',
       size: (req.file.size / (1024 * 1024)).toFixed(2) + ' MB',
       uploadedAt: new Date().toISOString().slice(0, 10),
@@ -301,7 +313,7 @@ exports.updateDocument = async (req, res) => {
   try {
     const { docId, memberId } = req.params;
     const { name, category, itrYear } = req.body;
-    
+
     const client = await Client.findById(req.params.id);
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
@@ -324,10 +336,10 @@ exports.updateDocument = async (req, res) => {
           deleteFile(oldFilePath);
         }
         doc.name = name || req.file.originalname;
-        doc.type = req.file.mimetype.includes('pdf') ? 'PDF' : 
-                   req.file.mimetype.includes('image') ? 'Image' : 
-                   req.file.mimetype.includes('word') ? 'Word' : 
-                   req.file.mimetype.includes('excel') ? 'Excel' : 'Other';
+        doc.type = req.file.mimetype.includes('pdf') ? 'PDF' :
+          req.file.mimetype.includes('image') ? 'Image' :
+            req.file.mimetype.includes('word') ? 'Word' :
+              req.file.mimetype.includes('excel') ? 'Excel' : 'Other';
         doc.size = (req.file.size / (1024 * 1024)).toFixed(2) + ' MB';
         doc.filePath = getUploadedPath(req.file.filename);
       }
@@ -335,7 +347,7 @@ exports.updateDocument = async (req, res) => {
       if (category) doc.category = category;
       if (itrYear) doc.itrYear = itrYear;
     }
-    
+
     await client.save();
     res.json(client);
   } catch (error) {
