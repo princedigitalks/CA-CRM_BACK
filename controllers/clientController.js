@@ -181,7 +181,7 @@ exports.deleteFamilyMember = async (req, res) => {
 
 exports.addDocument = async (req, res) => {
   try {
-    const { name, type, size, category, itrYear, memberId } = req.body;
+    const { name, type, size, category, itrYear, memberId, filePath } = req.body;
     const client = await Client.findById(req.params.id);
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
@@ -193,6 +193,7 @@ exports.addDocument = async (req, res) => {
       uploadedAt: new Date().toISOString().slice(0, 10),
       category,
       itrYear,
+      ...(filePath && { filePath }),
     };
     if (memberId) {
       const member = client.familyMembers.find(m => m._id.toString() === memberId);

@@ -12,7 +12,7 @@ const documentSchema = new mongoose.Schema({
 
 const familyMemberSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  relation: { type: String, required: true },
+  relation: { type: String },
   phone: { type: String },
   email: { type: String },
   documents: [documentSchema],
