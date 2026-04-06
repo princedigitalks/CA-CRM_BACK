@@ -88,7 +88,7 @@ exports.getAllClientsData = async (req, res) => {
 
     const fileUrl = `${process.env.backend_URL}${selectedDoc.filePath}`;
 
-    res.json(fileUrl);
+    res.status(200).json({ doc: fileUrl });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
