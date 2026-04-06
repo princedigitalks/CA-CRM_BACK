@@ -145,18 +145,12 @@ exports.deleteClient = async (req, res) => {
 
 exports.addFamilyMember = async (req, res) => {
   try {
-    const { name, relation, phone, email } = req.body;
+    const { name } = req.body;
     const client = await Client.findById(req.params.id);
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
     }
-    client.familyMembers.push({
-      name,
-      relation,
-      phone,
-      email,
-      documents: [],
-    });
+    client.familyMembers.push({ name, documents: [] });
     await client.save();
     res.json(client);
   } catch (error) {
@@ -181,7 +175,7 @@ exports.deleteFamilyMember = async (req, res) => {
 
 exports.addDocument = async (req, res) => {
   try {
-    const { name, type, size, category, itrYear, memberId } = req.body;
+    const { name, type, size, category, itrYear, subCategory, memberId } = req.body;
     const client = await Client.findById(req.params.id);
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
@@ -192,6 +186,7 @@ exports.addDocument = async (req, res) => {
       size,
       uploadedAt: new Date().toISOString().slice(0, 10),
       category,
+      subCategory: subCategory || '',
       itrYear,
     };
     if (memberId) {
@@ -245,7 +240,7 @@ exports.deleteDocument = async (req, res) => {
 exports.uploadDocument = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, category, itrYear, memberId } = req.body;
+    const { name, category, itrYear, subCategory, memberId } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
@@ -265,6 +260,7 @@ exports.uploadDocument = async (req, res) => {
       size: (req.file.size / (1024 * 1024)).toFixed(2) + ' MB',
       uploadedAt: new Date().toISOString().slice(0, 10),
       category,
+      subCategory: subCategory || '',
       itrYear,
       filePath: getUploadedPath(req.file.filename),
     };
@@ -323,7 +319,7 @@ exports.searchClients = async (req, res) => {
 exports.updateDocument = async (req, res) => {
   try {
     const { docId, memberId } = req.params;
-    const { name, category, itrYear } = req.body;
+    const { name, category, itrYear, subCategory } = req.body;
 
     const client = await Client.findById(req.params.id);
     if (!client) {
@@ -356,6 +352,7 @@ exports.updateDocument = async (req, res) => {
       }
       if (name) doc.name = name;
       if (category) doc.category = category;
+      if (subCategory !== undefined) doc.subCategory = subCategory;
       if (itrYear) doc.itrYear = itrYear;
     }
 
