@@ -53,47 +53,7 @@ exports.getAllClients = async (req, res) => {
   }
 };
 
-exports.getAllClientsData = async (req, res) => {
-  try {
-    const { id, doc } = req.params;
-    const { itrYear, cat } = req.query;
 
-    const client = await Client.findOne({ _id: id, isDeleted: false });
-
-    if (!client || !client.documents?.length) {
-      return res.status(404).json({ message: "Client or documents not found" });
-    }
-
-    // Filter by category
-    let filteredDocs = client.documents.filter(d => d.category === doc);
-
-    if (!filteredDocs.length) {
-      return res.status(404).json({ message: "Document not found" });
-    }
-
-    let selectedDoc;
-
-    // Handle special cases
-    if (doc === "ITR") {
-      selectedDoc = filteredDocs.find(d => d.itrYear === itrYear);
-    } else if (doc === "Other") {
-      selectedDoc = filteredDocs.find(d => d.subCategory === cat);
-    } else {
-      selectedDoc = filteredDocs[0]; // PAN, Aadhaar, GST, Udyam
-    }
-
-    if (!selectedDoc) {
-      return res.status(404).json({ message: "Requested document not found" });
-    }
-
-    const fileUrl = `${process.env.backend_URL}${selectedDoc.filePath}`;
-
-    res.status(200).json({ doc: fileUrl });
-
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 exports.getClientById = async (req, res) => {
   try {

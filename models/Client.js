@@ -19,7 +19,7 @@ const familyMemberSchema = new mongoose.Schema({
 const clientSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String },
-  phone: { type: String, required: true },
+  phone: { type: String, required: true, unique: true },
   paymentStatus: { type: String, enum: ['CLEAR', 'PENDING'], default: 'PENDING' },
   serviceEnabled: { type: Boolean, default: true },
   createdAt: { type: String, required: true },

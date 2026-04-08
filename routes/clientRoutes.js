@@ -13,7 +13,6 @@ const {
   uploadDocument,
   updateDocument,
   searchClients,
-  getAllClientsData,
 } = require('../controllers/clientController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../utils/multerConfig');
@@ -21,7 +20,6 @@ const upload = require('../utils/multerConfig');
 router.get('/clients', protect, getAllClients);
 router.get('/clients/search', protect, searchClients);
 router.get('/clients/:id', protect, getClientById);
-router.get('/clientsfind/:id/:doc', getAllClientsData);
 router.post('/clients', protect, createClient);
 router.put('/clients/:id', protect, updateClient);
 router.delete('/clients/:id', protect, deleteClient);
