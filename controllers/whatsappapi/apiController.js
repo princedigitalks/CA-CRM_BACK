@@ -40,8 +40,8 @@ exports.getContactByFamilyDataFetch = async (req, res) => {
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
-        let Data = client.familyMembers.map(member => member.name);
-        res.json({ members: ['Self', ...Data] });
+        let Data = client.familyMembers.map((member, index) => ({ id: index + 2, name: member.name }));
+        res.json({ members: [{ id: 1, name: 'Self' }, ...Data] });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
