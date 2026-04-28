@@ -65,15 +65,33 @@ exports.getContactByFamilyDataFetch = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: "Client not found" });
     }
-    let Data = client.familyMembers.map((member, index) => ({
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const allMembers = [{ id: 1, name: "Self" }, ...client.familyMembers.map((member, index) => ({
       id: index + 2,
       name: member.name,
-    }));
-    res.json({ members: [{ id: 1, name: "Self" }, ...Data] });
+    }))];
+
+    const total = allMembers.length;
+    const members = allMembers.slice(skip, skip + limit);
+
+    res.json({
+      members,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getDocByDataFetch = async (req, res) => {
   try {
