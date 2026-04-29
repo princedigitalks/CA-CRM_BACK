@@ -86,9 +86,21 @@ exports.getDocByDataFetch = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: "Client not found" });
     }
-    console.log(client.documents);
+    let Data = client.familyMembers.map((member, index) => ({
+      id: index + 2,
+      name: member.name,
+    }));
+
+    Data = [{ id: 1, name: "Self" }, ...Data]
+    console.log( );
+    if(Data.length < req.params.person){
+      return res.status(404).json({ message: "Person not found" });
+    }
+    let person = Data.find((member) => member.id == req.params.person);
+
+
     let doc = {};
-    if (req.params.person === "Self") {
+    if (person.name === "Self") {
       doc = client.documents.map((d, i) => {
         return {
           id: i,
@@ -102,7 +114,7 @@ exports.getDocByDataFetch = async (req, res) => {
       });
     } else {
       doc = client.familyMembers
-        .find((member) => member.name === req.params.person)
+        .find((member) => member.name === person.name)
         .documents.map((d, i) => {
           return {
             id: i,
