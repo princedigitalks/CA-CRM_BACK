@@ -2,6 +2,7 @@ const Client = require("../../models/Client");
 
 exports.getContactByDataFetch = async (req, res) => {
   try {
+    
     const client = await Client.findOne({
       isDeleted: false,
       phone: req.params.phone,
@@ -10,12 +11,21 @@ exports.getContactByDataFetch = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: "Client not found" });
     }
+    let Data = client.familyMembers.map((member, index) => ({
+      id: index + 2,
+      name: member.name,
+    }));
+    
+    Data = [{ id: 1, name: "Self" }, ...Data]
+    let personName = Data.find((member) => member.id == req.params.person);
+    console.log(personName.name);
+
     let dataRecord = null;
-    if (req.params.person === "Self") {
+    if (personName.name === "Self") {
       dataRecord = { name: client.name, documents: client.documents };
     } else {
       const person = client.familyMembers.find(
-        (member) => member.name === req.params.person,
+        (member) => member.name === personName.name,
       );
       dataRecord = person
         ? { name: person.name, documents: person.documents }
@@ -92,8 +102,7 @@ exports.getDocByDataFetch = async (req, res) => {
     }));
 
     Data = [{ id: 1, name: "Self" }, ...Data]
-    console.log( );
-    if(Data.length < req.params.person){
+    if (Data.length < req.params.person) {
       return res.status(404).json({ message: "Person not found" });
     }
     let person = Data.find((member) => member.id == req.params.person);
