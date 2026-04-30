@@ -47,7 +47,8 @@ app.use('/api', require('./routes/clientRoutes'));
 app.use('/api', require('./routes/itrYearRoutes'));
 app.use('/api', require('./routes/staffRoutes'));
 app.use('/api/masters', require('./routes/masterRoutes'));
-app.use('/api/whatsapp' , require('./routes/whatsapp/api'))
+app.use('/api/whatsapp', require('./routes/whatsapp/api'))
+app.use('/automation', require('./routes/automationRoutes/api'));
 
 // 404
 app.use((req, res) => {
