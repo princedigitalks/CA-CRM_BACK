@@ -23,7 +23,7 @@ exports.getSection = async (req, res) => {
 
     const sections = Array.from({ length: totalSections }, (_, i) => ({
       id: i + 1,
-      name: `section${i + 1}`,
+      name: `memberlist${i + 1}`,
     }));
 
     const sectionWithMembers = sections.map((section, index) => ({
@@ -64,7 +64,7 @@ exports.getSectiontoMemberId = async (req, res) => {
 
     const sections = Array.from({ length: totalSections }, (_, i) => ({
       id: i + 1,
-      name: `section${i + 1}`,
+      name: `memberlist${i + 1}`,
     }));
 
     const sectionWithMembers = sections.map((section, index) => ({
