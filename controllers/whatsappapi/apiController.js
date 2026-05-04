@@ -77,7 +77,7 @@ exports.getContactByFamilyDataFetch = async (req, res) => {
     }
     let Data = client.familyMembers.map((member, index) => ({
       id: index + 2,
-      name: member.name,
+      name: member.name.trim().replace(/\s+/g, ' '),
     }));
     res.json({ members: [{ id: 1, name: "Self" }, ...Data] });
   } catch (error) {
@@ -122,8 +122,9 @@ exports.getDocByDataFetch = async (req, res) => {
         };
       });
     } else {
+      const normalizedPersonName = person.name.trim().replace(/\s+/g, ' ');
       doc = client.familyMembers
-        .find((member) => member.name === person.name)
+        .find((member) => member.name.trim().replace(/\s+/g, ' ') === normalizedPersonName)
         .documents.map((d, i) => {
           return {
             id: i,
