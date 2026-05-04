@@ -73,9 +73,9 @@ exports.createClient = async (req, res) => {
   try {
     const { name, email, phone, paymentStatus, serviceEnabled } = req.body;
     const client = new Client({
-      name,
-      email,
-      phone,
+      name: name?.trim(),
+      email: email?.trim(),
+      phone: phone?.trim(),
       paymentStatus: paymentStatus || 'PENDING',
       serviceEnabled: serviceEnabled !== undefined ? serviceEnabled : true,
       createdAt: new Date().toISOString().slice(0, 10),
@@ -94,7 +94,7 @@ exports.updateClient = async (req, res) => {
     const { name, email, phone, paymentStatus, serviceEnabled } = req.body;
     const client = await Client.findByIdAndUpdate(
       req.params.id,
-      { name, email, phone, paymentStatus, serviceEnabled },
+      { name: name?.trim(), email: email?.trim(), phone: phone?.trim(), paymentStatus, serviceEnabled },
       { new: true, runValidators: true }
     );
     if (!client) {
@@ -131,7 +131,7 @@ exports.addFamilyMember = async (req, res) => {
     if (!client) {
       return res.status(404).json({ message: 'Client not found' });
     }
-    client.familyMembers.push({ name, documents: [] });
+    client.familyMembers.push({ name: name?.trim(), documents: [] });
     await client.save();
     res.json(client);
   } catch (error) {
@@ -162,13 +162,13 @@ exports.addDocument = async (req, res) => {
       return res.status(404).json({ message: 'Client not found' });
     }
     const doc = {
-      name,
-      type,
-      size,
+      name: name?.trim(),
+      type: type?.trim(),
+      size: size?.trim(),
       uploadedAt: new Date().toISOString().slice(0, 10),
-      category,
-      subCategory: subCategory || '',
-      itrYear,
+      category: category?.trim(),
+      subCategory: subCategory?.trim() || '',
+      itrYear: itrYear?.trim(),
     };
     if (memberId) {
       const member = client.familyMembers.find(m => m._id.toString() === memberId);
@@ -233,16 +233,16 @@ exports.uploadDocument = async (req, res) => {
     }
 
     const doc = {
-      name: name || req.file.originalname,
+      name: name?.trim() || req.file.originalname,
       type: req.file.mimetype.includes('pdf') ? 'PDF' :
         req.file.mimetype.includes('image') ? 'Image' :
           req.file.mimetype.includes('word') ? 'Word' :
             req.file.mimetype.includes('excel') ? 'Excel' : 'Other',
       size: (req.file.size / (1024 * 1024)).toFixed(2) + ' MB',
       uploadedAt: new Date().toISOString().slice(0, 10),
-      category,
-      subCategory: subCategory || '',
-      itrYear,
+      category: category?.trim(),
+      subCategory: subCategory?.trim() || '',
+      itrYear: itrYear?.trim(),
       filePath: getUploadedPath(req.file.filename),
     };
 
@@ -331,10 +331,10 @@ exports.updateDocument = async (req, res) => {
         doc.size = (req.file.size / (1024 * 1024)).toFixed(2) + ' MB';
         doc.filePath = getUploadedPath(req.file.filename);
       }
-      if (name) doc.name = name;
-      if (category) doc.category = category;
-      if (subCategory !== undefined) doc.subCategory = subCategory;
-      if (itrYear) doc.itrYear = itrYear;
+      if (name) doc.name = name.trim();
+      if (category) doc.category = category.trim();
+      if (subCategory !== undefined) doc.subCategory = subCategory.trim();
+      if (itrYear) doc.itrYear = itrYear.trim();
     }
 
     await client.save();

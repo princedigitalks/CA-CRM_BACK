@@ -62,11 +62,11 @@ exports.updateMarquee = async (req, res) => {
     const { marqueName, marqueLink } = req.body;
     let setting = await GeneralSetting.findOne();
     if (setting) {
-      setting.marqueName = marqueName;
-      setting.marqueLink = marqueLink;
+      setting.marqueName = marqueName?.trim();
+      setting.marqueLink = marqueLink?.trim();
       await setting.save();
     } else {
-      setting = await GeneralSetting.create({ marqueName, marqueLink });
+      setting = await GeneralSetting.create({ marqueName: marqueName?.trim(), marqueLink: marqueLink?.trim() });
     }
     res.json({ message: 'Marquee updated', marqueName, marqueLink });
   } catch (err) {

@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 
 const documentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true },
-  size: { type: String, required: true },
-  uploadedAt: { type: String, required: true },
-  category: { type: String, required: true },
-  subCategory: { type: String, default: '' },
-  itrYear: { type: String },
-  filePath: { type: String },
+  name: { type: String, required: true, trim: true },
+  type: { type: String, required: true, trim: true },
+  size: { type: String, required: true, trim: true },
+  uploadedAt: { type: String, required: true, trim: true },
+  category: { type: String, required: true, trim: true },
+  subCategory: { type: String, default: '', trim: true },
+  itrYear: { type: String, trim: true },
+  filePath: { type: String, trim: true },
 }, { _id: true });
 
 const familyMemberSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, trim: true },
   documents: [documentSchema],
 }, { _id: true });
 

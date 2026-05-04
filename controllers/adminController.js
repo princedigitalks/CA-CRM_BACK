@@ -15,7 +15,7 @@ exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const admin = await Admin.findOne({ email: email.toLowerCase() });
+    const admin = await Admin.findOne({ email: email.trim().toLowerCase() });
 
     if (admin && (await admin.matchPassword(password))) {
       res.json({
@@ -94,8 +94,8 @@ exports.createInitialAdmin = async (req, res) => {
       return res.status(401).json({ message: "Old password is incorrect" });
     }
 
-    if (newEmail) admin.email = newEmail;
-    if (newPassword) admin.password = newPassword; // pre-save hook will hash
+    if (newEmail) admin.email = newEmail.trim();
+    if (newPassword) admin.password = newPassword.trim(); // pre-save hook will hash
 
     await admin.save();
 

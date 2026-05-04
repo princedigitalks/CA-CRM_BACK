@@ -102,10 +102,10 @@ exports.createStaff = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password.trim(), salt);
     const staff = new Staff({
-      name,
-      email,
+      name: name?.trim(),
+      email: email?.trim(),
       password: hashedPassword,
     });
     await staff.save();
@@ -128,10 +128,10 @@ exports.createStaff = async (req, res) => {
 exports.updateStaff = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const updateData = { name, email };
+    const updateData = { name: name?.trim(), email: email?.trim() };
     if (password) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password.trim(), salt);
       updateData.password = hashedPassword;
     }
     const staff = await Staff.findByIdAndUpdate(

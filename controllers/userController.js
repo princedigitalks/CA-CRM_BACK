@@ -17,16 +17,15 @@ exports.registerToken = async (req, res) => {
     let user = await User.findOne({ fcmToken });
 
     if (user) {
-      // Update info if provided
-      if (name) user.name = name;
-      if (email) user.email = email;
+      if (name) user.name = name.trim();
+      if (email) user.email = email.trim();
       await user.save();
     } else {
       // Create new user
       user = await User.create({
-        fcmToken,
-        name,
-        email
+        fcmToken: fcmToken.trim(),
+        name: name?.trim(),
+        email: email?.trim()
       });
     }
 

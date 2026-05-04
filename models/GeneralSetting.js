@@ -7,11 +7,13 @@ const GeneralSettingSchema = new mongoose.Schema({
   },
   marqueName: {
     type: String,
-    default: ''
+    default: '',
+    trim: true,
   },
   marqueLink: {
     type: String,
-    default: ''
+    default: '',
+    trim: true,
   }
 });
 
