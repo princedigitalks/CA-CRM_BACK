@@ -142,3 +142,47 @@ exports.getDocByDataFetch = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getSectiontoMemberId = async (req, res) => {
+  try {
+    const client = await Client.findOne({
+      isDeleted: false,
+      phone: req.params.phone,
+    });
+
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+
+    let Data = client.familyMembers.map((member, index) => ({
+      id: index + 2,
+      name: member.name.trim().replace(/\s+/g, ' '),
+    }));
+
+    let WholeMembers = [{ id: 1, name: client.name.trim().replace(/\s+/g, ' ') }, ...Data];
+
+    const sectionSize = 10;
+    const totalSections = Math.ceil(WholeMembers.length / sectionSize);
+
+    const sections = Array.from({ length: totalSections }, (_, i) => ({
+      id: i + 1,
+      name: `Family Group ${i + 1}`,
+    }));
+
+    const sectionWithMembers = sections.map((section, index) => ({
+      ...section,
+      members: WholeMembers.slice(
+        index * sectionSize,
+        index * sectionSize + sectionSize
+      ),
+    }));
+
+    let findSection = sectionWithMembers.find(
+      (section) => section.name == req.params.sectionId
+    );
+
+    res.json({ members: findSection.members });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
