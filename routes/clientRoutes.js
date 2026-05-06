@@ -7,6 +7,7 @@ const {
   updateClient,
   deleteClient,
   addFamilyMember,
+  updateFamilyMember,
   deleteFamilyMember,
   addDocument,
   deleteDocument,
@@ -25,6 +26,7 @@ router.put('/clients/:id', protect, updateClient);
 router.delete('/clients/:id', protect, deleteClient);
 
 router.post('/clients/:id/family', protect, addFamilyMember);
+router.put('/clients/:id/family/:memberId', protect, updateFamilyMember);
 router.delete('/clients/:id/family/:memberId', protect, deleteFamilyMember);
 
 router.post('/clients/:id/documents', protect, addDocument);

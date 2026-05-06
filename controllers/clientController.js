@@ -139,6 +139,22 @@ exports.addFamilyMember = async (req, res) => {
   }
 };
 
+exports.updateFamilyMember = async (req, res) => {
+  try {
+    const { memberId } = req.params;
+    const { name } = req.body;
+    const client = await Client.findById(req.params.id);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+    const member = client.familyMembers.find(m => m._id.toString() === memberId);
+    if (!member) return res.status(404).json({ message: 'Family member not found' });
+    if (name) member.name = name.trim();
+    await client.save();
+    res.json(client);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.deleteFamilyMember = async (req, res) => {
   try {
     const { memberId } = req.params;
