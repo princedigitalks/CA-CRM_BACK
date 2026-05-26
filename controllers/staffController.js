@@ -42,7 +42,7 @@ exports.loginStaff = async (req, res) => {
   try {
     console.log(email, password);
     const staff = await Staff.findOne({ email: email.toLowerCase() });
-    
+
     // Rename this variable to something else, like 'isMatch'
     const isMatch = await bcrypt.compare(password, staff.password)
     console.log(isMatch, 'dikjf', staff);
@@ -100,13 +100,12 @@ exports.getStaffById = async (req, res) => {
  */
 exports.createStaff = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password.trim(), salt);
+    const { name, email, password, role } = req.body;
     const staff = new Staff({
       name: name?.trim(),
       email: email?.trim(),
-      password: hashedPassword,
+      password: password?.trim(),
+      role: role || 'staff',
     });
     await staff.save();
     res.status(201).json({
@@ -127,22 +126,26 @@ exports.createStaff = async (req, res) => {
  */
 exports.updateStaff = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const updateData = { name: name?.trim(), email: email?.trim() };
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password.trim(), salt);
-      updateData.password = hashedPassword;
-    }
-    const staff = await Staff.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    ).select('-password');
+    const { name, email, password, role } = req.body;
+
+    const staff = await Staff.findById(req.params.id);
     if (!staff) {
       return res.status(404).json({ message: 'Staff not found' });
     }
-    res.json(staff);
+
+    if (name) staff.name = name.trim();
+    if (email) staff.email = email.trim();
+    if (password) staff.password = password.trim();
+    if (role) staff.role = role;
+
+    await staff.save();
+
+    res.json({
+      _id: staff._id,
+      name: staff.name,
+      email: staff.email,
+      role: staff.role,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
