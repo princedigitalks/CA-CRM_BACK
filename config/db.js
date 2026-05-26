@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const MONGODB_URI =
-  process.env.MONGO_URI || 'mongodb://localhost:27017/ca-crm-backend';
+  process.env.MONGO_URI || 'mongodb://localhost:27017/ca-flow-backend';
 
 let isConnected = false;
 

@@ -1,5 +1,5 @@
 {
-  "name": "hills-backend",
+  "name": "ca-flow-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
